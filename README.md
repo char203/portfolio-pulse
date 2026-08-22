@@ -8,6 +8,15 @@ Portfolio Pulse is a multi-asset portfolio analytics project built to evaluate a
 
 Interactive portfolio analysis with allocation controls, benchmark comparison, historical stress testing, return attribution, and allocation sensitivity.
 
+### Portfolio Overview
+![Portfolio Pulse overview](assets/portfolio-overview.png)
+
+### Historical Risk Analysis
+![Portfolio Pulse stress testing](assets/stress-testing.png)
+
+### Attribution & Allocation Sensitivity
+![Portfolio Pulse allocation analysis](assets/allocation-analysis.png)
+
 It combines:
 
 - Python for market data and portfolio analytics
