@@ -2,6 +2,12 @@
 
 Portfolio Pulse is a multi-asset portfolio analytics project built to evaluate allocation decisions, benchmark-relative performance, historical downside risk, and return drivers using real ETF market data.
 
+## Live Demo
+
+**[Launch Portfolio Pulse →](https://charlottekwon-portfolio-pulse.streamlit.app/)**
+
+Interactive portfolio analysis with allocation controls, benchmark comparison, historical stress testing, return attribution, and allocation sensitivity.
+
 It combines:
 
 - Python for market data and portfolio analytics
