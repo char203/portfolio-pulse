@@ -2,8 +2,6 @@
 
 **Multi-asset portfolio analytics, risk monitoring, investment-policy controls, and non-financial risk analysis built with Python, Streamlit, and Excel/VBA.**
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-red)](https://charlottekwon-portfolio-pulse.streamlit.app/)
-
 ## Live Demo
 
 **[Launch Portfolio Pulse →](https://charlottekwon-portfolio-pulse.streamlit.app/)**
@@ -27,7 +25,7 @@ The project combines:
 
 ---
 
-## Demo
+# Demo
 
 ### Portfolio Overview
 
@@ -45,9 +43,13 @@ The project combines:
 
 ![Portfolio Pulse controls and exception monitoring](assets/portfolio-controls.png)
 
+### Non-Financial Risk Monitoring
+
+![Portfolio Pulse NFR risk and control monitoring](assets/nfr-risk-monitoring.png)
+
 ---
 
-## What Portfolio Pulse Does
+# What Portfolio Pulse Does
 
 Users define a hypothetical portfolio allocation across four asset sleeves:
 
@@ -60,7 +62,7 @@ Users define a hypothetical portfolio allocation across four asset sleeves:
 
 Portfolio Pulse evaluates the allocation against a **60% VTI / 40% AGG benchmark**.
 
-The analytics engine calculates:
+The investment analytics engine calculates:
 
 - Annualized return
 - Annualized volatility
@@ -74,9 +76,13 @@ The analytics engine calculates:
 - Allocation sensitivity
 - Investment-policy control exceptions
 
-A separate risk-and-control layer extends the analysis with:
+A separate risk-and-control layer extends the platform with:
 
-- Operational, data, model, technology, and third-party risk classification
+- Operational risk
+- Data risk
+- Model risk
+- Technology risk
+- Third-party risk
 - RCSA-style risk assessment
 - Inherent and residual risk scoring
 - Preventive and detective control classification
@@ -88,9 +94,9 @@ The same Python analytical logic supports the Streamlit application and Excel/VB
 
 ---
 
-## Why I Built It
+# Why I Built It
 
-I built Portfolio Pulse to develop a more hands-on understanding of portfolio construction, investment risk, and control design beyond standard financial analysis.
+I built Portfolio Pulse to develop a hands-on understanding of portfolio construction, investment risk, and control design beyond standard financial analysis.
 
 The initial question was:
 
@@ -102,21 +108,25 @@ As the project developed, a second question emerged:
 
 That led to a system designed around four principles:
 
-1. **Measure both return and risk.**  
-   Portfolio performance is evaluated alongside volatility, drawdown, beta, and historical crisis behavior.
+### 1. Measure both return and risk
 
-2. **Make assumptions explicit.**  
-   Historical proxy substitutions and portfolio-control thresholds are disclosed rather than hidden.
+Portfolio performance is evaluated alongside volatility, drawdown, beta, and historical crisis behavior.
 
-3. **Separate analytics from presentation.**  
-   Python remains the calculation source of truth while Streamlit and Excel/VBA provide different interfaces.
+### 2. Make assumptions explicit
 
-4. **Make controls operational.**  
-   Defined rules are translated into testable thresholds, exceptions, KRIs, and risk-monitoring workflows.
+Historical proxy substitutions and portfolio-control thresholds are disclosed rather than hidden.
+
+### 3. Separate analytics from presentation
+
+Python remains the calculation source of truth while Streamlit and Excel/VBA provide different interfaces.
+
+### 4. Make controls operational
+
+Defined rules are translated into testable thresholds, exceptions, KRIs, and risk-monitoring workflows.
 
 ---
 
-## Architecture
+# Architecture
 
 ```text
                          Market Data
@@ -197,7 +207,7 @@ This allows portfolio decisions to be evaluated based on both the return generat
 
 ---
 
-## Historical Stress Testing
+# Historical Stress Testing
 
 Portfolio Pulse evaluates portfolio behavior during three distinct historical market environments.
 
@@ -225,7 +235,7 @@ Historical stress testing is descriptive rather than predictive.
 
 ---
 
-## Historical Proxy Methodology
+# Historical Proxy Methodology
 
 One practical challenge is that several ETFs in the current portfolio did not exist during earlier market crises.
 
@@ -246,7 +256,7 @@ Automated tests also verify that historical proxy resolution does not silently d
 
 ---
 
-## Return Attribution
+# Return Attribution
 
 Portfolio Pulse calculates asset-level daily arithmetic contribution as:
 
@@ -268,7 +278,7 @@ The project deliberately does **not** label this analysis as Brinson attribution
 
 ---
 
-## Allocation Sensitivity
+# Allocation Sensitivity
 
 Portfolio Pulse evaluates controlled allocation changes around the selected portfolio.
 
@@ -325,7 +335,7 @@ Exception + Severity
 Remediation
 ```
 
-### Current Controls
+## Current Controls
 
 The default policy evaluates seven rules:
 
@@ -374,6 +384,10 @@ They are not regulatory requirements, and Portfolio Pulse should not be interpre
 
 Portfolio Pulse extends its investment controls with an educational **non-financial risk (NFR) and controls framework**.
 
+### NFR Risk Dashboard
+
+![Portfolio Pulse NFR risk and control monitoring](assets/nfr-risk-monitoring.png)
+
 The framework demonstrates how risks can move through a structured lifecycle:
 
 ```text
@@ -416,7 +430,7 @@ This taxonomy allows technical and analytical failures to be treated as identifi
 
 ---
 
-## RCSA-Style Risk Assessment
+# RCSA-Style Risk Assessment
 
 Each identified risk is assessed using a simplified **Risk and Control Self-Assessment (RCSA)-style methodology**.
 
@@ -441,7 +455,7 @@ Control
 Residual Risk
 ```
 
-### Risk Ratings
+## Risk Ratings
 
 | Score | Rating |
 |---:|---|
@@ -476,17 +490,17 @@ This makes the intended effect of a control visible rather than simply recording
 
 ---
 
-## Control Classification
+# Control Classification
 
 Controls are classified across two dimensions.
 
-### Control Purpose
+## Control Purpose
 
 **Preventive controls** are designed to stop an issue before it affects the analysis.
 
 **Detective controls** identify an issue after or as it occurs.
 
-### Execution
+## Execution
 
 Controls are also classified as:
 
@@ -505,7 +519,7 @@ Examples include:
 
 ---
 
-## Key Risk Indicators
+# Key Risk Indicators
 
 The NFR dashboard includes project-defined **Key Risk Indicators (KRIs)** for ongoing monitoring.
 
@@ -529,7 +543,7 @@ This separates **ongoing risk monitoring** from one-time risk assessment.
 
 ---
 
-## Incident & Issue Management
+# Incident & Issue Management
 
 Portfolio Pulse maintains a structured incident and issue log.
 
@@ -556,7 +570,7 @@ The framework treats these as risk and control events that can be categorized, r
 
 ---
 
-## Incident Trend Analysis
+# Incident Trend Analysis
 
 Incident data is aggregated to identify:
 
@@ -587,7 +601,7 @@ This allows recurring operational or technical issues to be distinguished from i
 
 ---
 
-## NFR Framework Disclaimer
+# NFR Framework Disclaimer
 
 The NFR module is an **educational risk-and-controls implementation**.
 
@@ -639,7 +653,7 @@ Or use the deployed version:
 
 ---
 
-## Excel + VBA Workflow
+# Excel + VBA Workflow
 
 Portfolio Pulse also includes an analyst-style Excel implementation.
 
@@ -661,9 +675,7 @@ This allows portfolio analysis to be consumed through a familiar spreadsheet wor
 
 ---
 
-# Testing
-
-## Automated Testing
+# Automated Testing
 
 Portfolio Pulse currently includes **13 automated tests**.
 
@@ -736,7 +748,8 @@ portfolio-pulse/
 │   ├── portfolio-overview.png
 │   ├── stress-testing.png
 │   ├── allocation-analysis.png
-│   └── portfolio-controls.png
+│   ├── portfolio-controls.png
+│   └── nfr-risk-monitoring.png
 │
 └── excel/
     ├── Portfolio_Pulse_Analysis.xlsm
@@ -800,43 +813,43 @@ portfolio-pulse/
 
 # Key Takeaways
 
-## Diversification is about risk exposure, not asset count
+### Diversification is about risk exposure, not asset count
 
 Adding more asset classes does not automatically reduce drawdown. The underlying exposures and their behavior across market regimes matter more than the number of holdings.
 
-## Ending return can hide path risk
+### Ending return can hide path risk
 
 Two portfolios can produce similar ending wealth while exposing an investor to very different drawdowns and recovery periods.
 
-## Stock/bond diversification is regime-dependent
+### Stock/bond diversification is regime-dependent
 
 The 2022 inflation and rate shock demonstrates that equities and bonds do not necessarily offset one another in every environment.
 
-## Benchmark-relative performance needs risk context
+### Benchmark-relative performance needs risk context
 
 Outperforming a benchmark is more informative when considered alongside volatility, drawdown, beta, and the additional risk required to generate that return.
 
-## Controls make analytical rules operational
+### Controls make analytical rules operational
 
 A portfolio rule becomes more useful when it can be translated into a testable threshold, evaluated consistently, and surfaced as an exception when breached.
 
-## Inherent risk and residual risk answer different questions
+### Inherent risk and residual risk answer different questions
 
 Assessing risk before and after a control makes the intended effect of the control visible and separates the underlying exposure from the remaining risk.
 
-## KRIs turn risk assessment into ongoing monitoring
+### KRIs turn risk assessment into ongoing monitoring
 
 A risk register identifies risks at a point in time. KRIs provide a mechanism for observing whether the underlying risk or control environment changes.
 
-## Incidents can reveal patterns
+### Incidents can reveal patterns
 
 Logging root cause, remediation, severity, and recurrence makes it possible to distinguish isolated failures from repeated control or process weaknesses.
 
-## Reconciliation matters
+### Reconciliation matters
 
 Analytical outputs should tie back to their underlying calculations. The attribution reconciliation control verifies that reported asset contributions reproduce portfolio daily return.
 
-## Transparency matters when historical data is incomplete
+### Transparency matters when historical data is incomplete
 
 When an ETF does not have sufficient history for a stress scenario, explicitly documenting a reasonable proxy is more defensible than silently dropping the exposure.
 
