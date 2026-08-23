@@ -1,0 +1,5 @@
+Date,Category,Issue,Severity,Root Cause,Control Failed,Remediation,Resolution Hours,Recurring
+2026-08-20,Technology,Excel Python refresh failed,Medium,Execution path and permissions,Refresh workflow,Corrected execution path and permissions,2,Y
+2026-08-20,Technology,Merged-cell workbook write failed,Medium,Output targeted a merged cell,Workbook output validation,Moved output to writable cells,1,N
+2026-08-21,Data,Historical ETF lacked full scenario history,High,ETF inception date,Historical data completeness,Added disclosed historical proxy resolution,3,Y
+2026-08-22,Model,Attribution needed reconciliation evidence,Medium,No explicit reconciliation control,Attribution reconciliation,Added automated reconciliation test,2,N

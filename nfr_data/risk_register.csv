@@ -1,0 +1,6 @@
+Risk ID,Category,Risk,Inherent Likelihood,Inherent Impact,Control,Control Type,Automation,Residual Likelihood,Residual Impact,Evidence
+R-001,Data,Required market-data series is missing or incomplete,3,4,Reject incomplete required series and validate proxy resolution,Preventive,Automated,1,4,Automated data tests
+R-002,Model,Attribution output does not reconcile to portfolio return,2,5,Daily arithmetic contribution reconciliation,Detective,Automated,1,3,Attribution test
+R-003,Operational,Portfolio weights are invalid,3,3,Weight-total validation before analysis,Preventive,Automated,1,2,Application validation
+R-004,Technology,Python-to-Excel refresh fails,3,3,Surface refresh failure and preserve diagnostic output,Detective,Semi-automated,2,2,Refresh log
+R-005,Third Party,External market-data dependency is unavailable,3,4,Fail visibly rather than silently returning incomplete analysis,Detective,Automated,2,3,Application error state
