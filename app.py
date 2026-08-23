@@ -4,6 +4,7 @@ import pandas as pd
 from market_engine import run_current_analysis, run_stress_tests
 from attribution import calculate_daily_contributions, summarize_contributions
 from sensitivity import build_sensitivity_scenarios, sensitivity_table
+from controls import evaluate_portfolio_controls, controls_summary
 
 st.set_page_config(
     page_title="Portfolio Pulse",
@@ -55,6 +56,10 @@ with st.spinner("Running portfolio analytics..."):
 p = current["portfolio_stats"]
 b = current["benchmark_stats"]
 
+# -------------------------------------------------------------------
+# Portfolio snapshot
+# -------------------------------------------------------------------
+
 st.subheader("Portfolio Snapshot")
 
 c1, c2, c3, c4 = st.columns(4)
@@ -71,11 +76,75 @@ c4.metric("Max Drawdown", f"{p['max_drawdown']:.2%}")
 c5, c6, c7 = st.columns(3)
 
 c5.metric("Beta vs 60/40", f"{p['beta']:.2f}")
-c6.metric("Ending Portfolio Value", f"${current['portfolio_wealth'].iloc[-1]:,.0f}")
-c7.metric("Ending 60/40 Value", f"${current['benchmark_wealth'].iloc[-1]:,.0f}")
+c6.metric(
+    "Ending Portfolio Value",
+    f"${current['portfolio_wealth'].iloc[-1]:,.0f}",
+)
+c7.metric(
+    "Ending 60/40 Value",
+    f"${current['benchmark_wealth'].iloc[-1]:,.0f}",
+)
+
+# -------------------------------------------------------------------
+# Investment-policy controls
+# -------------------------------------------------------------------
 
 st.divider()
+st.subheader("Portfolio Controls & Exceptions")
 
+control_results = evaluate_portfolio_controls(
+    weights=weights,
+    annualized_volatility=p["annualized_volatility"],
+    max_drawdown=p["max_drawdown"],
+)
+
+control_summary = controls_summary(control_results)
+
+cc1, cc2, cc3 = st.columns(3)
+cc1.metric(
+    "Controls Passed",
+    f"{control_summary['passed']}/{control_summary['total_controls']}",
+)
+cc2.metric("Exceptions", control_summary["failed"])
+cc3.metric("Overall Status", control_summary["overall_status"])
+
+controls_df = pd.DataFrame(
+    [
+        {
+            "Control": r.control,
+            "Rule": r.rule,
+            "Actual": r.actual,
+            "Status": r.status,
+            "Severity": r.severity,
+            "Remediation": r.remediation,
+        }
+        for r in control_results
+    ]
+)
+
+def format_control_actual(value):
+    if isinstance(value, (int, float)):
+        return f"{value:.2%}"
+    return value
+
+controls_df["Actual"] = controls_df["Actual"].map(format_control_actual)
+
+st.dataframe(
+    controls_df,
+    width="stretch",
+    hide_index=True,
+)
+
+st.caption(
+    "Illustrative investment-policy controls for educational analysis. "
+    "These are project-defined rules, not regulatory requirements."
+)
+
+# -------------------------------------------------------------------
+# Wealth curve
+# -------------------------------------------------------------------
+
+st.divider()
 st.subheader("Growth of Portfolio")
 
 wealth_df = pd.DataFrame(
@@ -96,8 +165,11 @@ st.caption(
     f"Historical ending-value difference vs. 60/40: ${ending_diff:,.0f}"
 )
 
-st.divider()
+# -------------------------------------------------------------------
+# Stress tests
+# -------------------------------------------------------------------
 
+st.divider()
 st.subheader("Historical Stress Tests")
 
 stress_display = stress[
@@ -136,12 +208,20 @@ st.caption(
     "They are not forecasts."
 )
 
-st.divider()
+# -------------------------------------------------------------------
+# Attribution
+# -------------------------------------------------------------------
 
+st.divider()
 st.subheader("Return Drivers")
 
 asset_returns = current["asset_returns"][list(weights.keys())]
-contributions = calculate_daily_contributions(asset_returns, weights)
+
+contributions = calculate_daily_contributions(
+    asset_returns,
+    weights,
+)
+
 summary = summarize_contributions(contributions)
 
 attr_df = pd.DataFrame(
@@ -158,8 +238,11 @@ st.caption(
     "(portfolio weight × asset return). It is not Brinson attribution."
 )
 
-st.divider()
+# -------------------------------------------------------------------
+# Sensitivity
+# -------------------------------------------------------------------
 
+st.divider()
 st.subheader("Allocation Sensitivity")
 
 scenarios = build_sensitivity_scenarios(weights)
@@ -196,6 +279,10 @@ st.caption(
     "Sensitivity scenarios apply controlled ±5% and ±10% shifts between VTI and AGG while holding other sleeves constant."
 )
 
+# -------------------------------------------------------------------
+# Methodology
+# -------------------------------------------------------------------
+
 st.divider()
 
 with st.expander("Methodology & limitations"):
@@ -222,11 +309,21 @@ with st.expander("Methodology & limitations"):
 - Maximum drawdown
 - Beta vs. 60/40 benchmark
 
+**Illustrative portfolio controls**
+- Portfolio weights = 100%
+- Single holding <= 50%
+- Total equity <= 80%
+- International equity >= 10%
+- Short-term Treasury allocation >= 5%
+- Annualized volatility <= 20%
+- Historical maximum drawdown <= 25%
+
 **Important limitations**
 - Historical results do not predict future performance.
 - ETF inception dates limit common-history analysis.
 - Historical stress testing uses disclosed proxies where required.
 - Sensitivity analysis is illustrative and not an investment recommendation.
+- Portfolio-control thresholds are project-defined investment-policy rules, not regulatory requirements.
 """
     )
 
