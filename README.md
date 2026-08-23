@@ -35,6 +35,10 @@ The project combines:
 
 ![Portfolio Pulse allocation analysis](assets/allocation-analysis.png)
 
+### Portfolio Controls & Exceptions
+
+![Portfolio Pulse controls and exception monitoring](assets/portfolio-controls.png)
+
 ---
 
 ## What Portfolio Pulse Does
