@@ -1,12 +1,14 @@
 # Portfolio Pulse
 
-**Multi-asset portfolio analytics, risk monitoring, and investment-policy controls built with Python, Streamlit, and Excel/VBA.**
+**Multi-asset portfolio analytics, risk monitoring, investment-policy controls, and non-financial risk analysis built with Python, Streamlit, and Excel/VBA.**
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Streamlit-red)](https://charlottekwon-portfolio-pulse.streamlit.app/)
 
 ## Live Demo
 
 **[Launch Portfolio Pulse →](https://charlottekwon-portfolio-pulse.streamlit.app/)**
 
-Portfolio Pulse is an interactive portfolio analytics platform for evaluating how asset-allocation decisions affect historical return, risk, downside exposure, and benchmark-relative performance.
+Portfolio Pulse is an interactive portfolio analytics and risk-monitoring platform for evaluating how asset-allocation decisions affect historical return, downside risk, benchmark-relative performance, and defined risk limits.
 
 The project combines:
 
@@ -17,6 +19,10 @@ The project combines:
 - Return attribution with reconciliation controls
 - Allocation sensitivity analysis
 - Investment-policy controls and exception monitoring
+- NFR-style risk and control monitoring
+- RCSA-style inherent and residual risk assessment
+- Key Risk Indicators (KRIs)
+- Incident and recurring-issue trend analysis
 - Automated testing
 
 ---
@@ -68,19 +74,33 @@ The analytics engine calculates:
 - Allocation sensitivity
 - Investment-policy control exceptions
 
-The same Python analytics engine supports both the Streamlit application and the Excel/VBA workflow.
+A separate risk-and-control layer extends the analysis with:
+
+- Operational, data, model, technology, and third-party risk classification
+- RCSA-style risk assessment
+- Inherent and residual risk scoring
+- Preventive and detective control classification
+- Key Risk Indicators
+- Incident and issue logging
+- Recurring-issue trend analysis
+
+The same Python analytical logic supports the Streamlit application and Excel/VBA workflow.
 
 ---
 
 ## Why I Built It
 
-I built Portfolio Pulse to develop a more hands-on understanding of portfolio construction and risk analysis beyond standard finance coursework.
+I built Portfolio Pulse to develop a more hands-on understanding of portfolio construction, investment risk, and control design beyond standard financial analysis.
 
 The initial question was:
 
 > How can portfolio analytics be rigorous enough to support an investment decision while still being understandable to a non-specialist?
 
-That led to a system designed around three principles:
+As the project developed, a second question emerged:
+
+> How can analytical rules and operational risks be translated into controls that can be tested, monitored, and escalated?
+
+That led to a system designed around four principles:
 
 1. **Measure both return and risk.**  
    Portfolio performance is evaluated alongside volatility, drawdown, beta, and historical crisis behavior.
@@ -89,70 +109,89 @@ That led to a system designed around three principles:
    Historical proxy substitutions and portfolio-control thresholds are disclosed rather than hidden.
 
 3. **Separate analytics from presentation.**  
-   Python remains the calculation source of truth while Streamlit and Excel/VBA provide different interfaces to the same analytical workflow.
+   Python remains the calculation source of truth while Streamlit and Excel/VBA provide different interfaces.
+
+4. **Make controls operational.**  
+   Defined rules are translated into testable thresholds, exceptions, KRIs, and risk-monitoring workflows.
 
 ---
 
 ## Architecture
 
 ```text
-Market Data
-    │
-    ▼
-  data.py
-    │
-    ▼
-portfolio.py + analytics.py
-    │
-    ▼
-market_engine.py
-    │
-    ├──────────────► Historical Stress Testing
-    │
-    ├──────────────► Return Attribution
-    │                    │
-    │                    └── Reconciliation Control
-    │
-    ├──────────────► Allocation Sensitivity
-    │
-    ├──────────────► Investment-Policy Controls
-    │                    │
-    │                    ▼
-    │               PASS / FAIL
-    │                    │
-    │                    ▼
-    │             Exception + Severity
-    │                    │
-    │                    ▼
-    │             Remediation Reporting
-    │
-    ├──────────────► Streamlit
-    │
-    └──────────────► Excel / VBA
+                         Market Data
+                              │
+                              ▼
+                           data.py
+                              │
+                              ▼
+                 portfolio.py + analytics.py
+                              │
+                              ▼
+                      market_engine.py
+                              │
+             ┌────────────────┼─────────────────┐
+             │                │                 │
+             ▼                ▼                 ▼
+       Stress Testing    Attribution       Sensitivity
+                              │
+                              ▼
+                     Reconciliation Control
+                              │
+                              ▼
+                        controls.py
+                              │
+                   Investment-Policy Rules
+                              │
+                              ▼
+                         PASS / FAIL
+                              │
+                              ▼
+                  Exception + Severity
+                              │
+                              ▼
+                         Remediation
+                              │
+                              ▼
+                           nfr.py
+                              │
+              ┌───────────────┼────────────────┐
+              ▼               ▼                ▼
+          Risk Register       KRIs        Incident Log
+              │                                  │
+              ▼                                  ▼
+       RCSA-Style Scoring                 Trend Analysis
+              │
+              ▼
+     Inherent → Controls → Residual Risk
+                              │
+                 ┌────────────┴────────────┐
+                 ▼                         ▼
+             Streamlit                 Excel / VBA
 ```
 
-The analytical logic is separated from the user interfaces so calculations remain consistent across outputs.
+The analytical, controls, and presentation layers are separated so calculations and risk logic can be tested independently.
 
 ---
 
-## Portfolio Analytics
+# Investment Analytics
 
-### Performance
+## Portfolio Performance
 
 Portfolio Pulse evaluates historical portfolio performance using:
 
-- annualized return
-- ending wealth
-- benchmark-relative return
+- Annualized return
+- Ending wealth
+- Benchmark-relative return
 
-### Risk
+## Portfolio Risk
 
 Risk analysis includes:
 
-- annualized volatility
-- maximum drawdown
-- beta versus the 60/40 benchmark
-- historical stress scenarios
+- Annualized volatility
+- Maximum drawdown
+- Beta versus the 60/40 benchmark
+- Historical stress scenarios
 
 This allows portfolio decisions to be evaluated based on both the return generated and the risk required to generate it.
 
@@ -160,7 +199,7 @@ This allows portfolio decisions to be evaluated based on both the return generat
 
 ## Historical Stress Testing
 
-Portfolio Pulse evaluates portfolio behavior during three distinct historical market environments:
+Portfolio Pulse evaluates portfolio behavior during three distinct historical market environments.
 
 ### Global Financial Crisis
 
@@ -168,7 +207,7 @@ Captures an equity and credit-market crisis in which portfolio losses and recove
 
 ### COVID Shock
 
-Captures the rapid 2020 equity-market selloff and unusually fast subsequent recovery.
+Captures the rapid 2020 equity-market selloff and subsequent recovery.
 
 ### 2022 Inflation / Rate Shock
 
@@ -176,11 +215,13 @@ Captures an environment in which rising inflation and interest rates pressured b
 
 For each scenario, the system evaluates:
 
-- period return
-- maximum drawdown
-- peak date
-- trough date
-- recovery date
+- Period return
+- Maximum drawdown
+- Peak date
+- Trough date
+- Recovery date
+
+Historical stress testing is descriptive rather than predictive.
 
 ---
 
@@ -219,7 +260,7 @@ The system then performs a reconciliation check:
 Σ Asset Contributions = Portfolio Daily Return
 ```
 
-This control verifies that the attribution output ties back to the underlying portfolio return.
+This verifies that the attribution output ties back to the underlying portfolio return.
 
 Multi-period results are therefore described as **cumulative arithmetic contribution**.
 
@@ -246,40 +287,47 @@ Base Portfolio
 For each scenario, the engine recalculates:
 
 - CAGR
-- annualized volatility
+- Annualized volatility
 - Sharpe ratio
-- maximum drawdown
-- ending portfolio value
+- Maximum drawdown
+- Ending portfolio value
 
 The purpose is to make the historical trade-off between additional equity exposure, return potential, and downside risk visible.
 
 ---
 
+# Investment-Policy Controls
+
 ## Portfolio Controls & Exception Monitoring
 
-Portfolio Pulse also includes an automated **investment-policy controls layer**.
+Portfolio Pulse includes an automated investment-policy controls layer that translates defined portfolio rules into testable thresholds.
 
-Rather than simply calculating portfolio statistics, this layer translates defined portfolio rules into automated tests.
+![Portfolio Pulse controls and exception monitoring](assets/portfolio-controls.png)
 
-The workflow is:
+The controls workflow follows:
 
 ```text
 Policy Rule
-    ↓
+    │
+    ▼
 Automated Control
-    ↓
+    │
+    ▼
 Portfolio Test
-    ↓
-PASS / FAIL
-    ↓
+    │
+    ▼
+ PASS / FAIL
+    │
+    ▼
 Exception + Severity
-    ↓
+    │
+    ▼
 Remediation
 ```
 
 ### Current Controls
 
-The default policy evaluates whether:
+The default policy evaluates seven rules:
 
 | Control | Rule |
 |---|---|
@@ -294,10 +342,10 @@ The default policy evaluates whether:
 Each control produces:
 
 - PASS / FAIL status
-- severity
-- observed value
-- policy threshold
-- remediation guidance when an exception occurs
+- Observed value
+- Policy threshold
+- Severity
+- Remediation guidance when an exception occurs
 
 For example:
 
@@ -310,38 +358,284 @@ Severity: Medium
 Remediation: Reduce concentrated asset exposure.
 ```
 
-### Important Controls Disclaimer
+This turns portfolio rules into an operational workflow rather than leaving them as descriptive guidelines.
+
+### Investment-Policy Controls Disclaimer
 
 These thresholds are **project-defined investment-policy rules created for educational analysis**.
 
 They are not regulatory requirements, and Portfolio Pulse should not be interpreted as a regulatory compliance system.
 
-The purpose of this module is to demonstrate how a defined policy can be translated into automated controls, exception detection, and remediation-oriented reporting.
+---
+
+# Non-Financial Risk Framework
+
+## Non-Financial Risk & Control Monitoring
+
+Portfolio Pulse extends its investment controls with an educational **non-financial risk (NFR) and controls framework**.
+
+The framework demonstrates how risks can move through a structured lifecycle:
+
+```text
+Risk Identification
+        │
+        ▼
+Risk Assessment
+        │
+        ▼
+Control Identification
+        │
+        ▼
+Residual Risk
+        │
+        ▼
+KRI Monitoring
+        │
+        ▼
+Incident / Issue Management
+        │
+        ▼
+Trend Analysis
+```
 
 ---
 
+## Risk Taxonomy
+
+The framework currently covers five NFR categories:
+
+| Risk Category | Portfolio Pulse Example |
+|---|---|
+| Operational Risk | Invalid portfolio inputs or workflow failures |
+| Data Risk | Missing market data, incomplete histories, or proxy-resolution issues |
+| Model Risk | Analytical outputs failing reconciliation or methodology controls |
+| Technology Risk | Python/Excel refresh failures or application errors |
+| Third-Party Risk | External market-data dependency failures |
+
+This taxonomy allows technical and analytical failures to be treated as identifiable risk events rather than isolated application errors.
+
+---
+
+## RCSA-Style Risk Assessment
+
+Each identified risk is assessed using a simplified **Risk and Control Self-Assessment (RCSA)-style methodology**.
+
+Likelihood and impact are each scored from **1 to 5**.
+
+```text
+Risk Score = Likelihood × Impact
+```
+
+The framework calculates risk both before and after controls:
+
+```text
+Risk
+ │
+ ▼
+Inherent Risk
+ │
+ ▼
+Control
+ │
+ ▼
+Residual Risk
+```
+
+### Risk Ratings
+
+| Score | Rating |
+|---:|---|
+| 1–4 | Low |
+| 5–9 | Moderate |
+| 10–15 | High |
+| 16–25 | Critical |
+
+For example:
+
+```text
+Risk:
+Required market-data series is missing or incomplete
+
+Inherent Likelihood: 3
+Inherent Impact: 4
+
+Inherent Risk Score: 12
+Inherent Rating: High
+
+Control:
+Reject incomplete required series and validate proxy resolution
+
+Residual Likelihood: 1
+Residual Impact: 4
+
+Residual Risk Score: 4
+Residual Rating: Low
+```
+
+This makes the intended effect of a control visible rather than simply recording whether a control exists.
+
+---
+
+## Control Classification
+
+Controls are classified across two dimensions.
+
+### Control Purpose
+
+**Preventive controls** are designed to stop an issue before it affects the analysis.
+
+**Detective controls** identify an issue after or as it occurs.
+
+### Execution
+
+Controls are also classified as:
+
+- Automated
+- Semi-automated
+
+Examples include:
+
+| Risk | Control | Type | Execution |
+|---|---|---|---|
+| Missing market data | Reject incomplete required series and validate proxy resolution | Preventive | Automated |
+| Attribution mismatch | Daily contribution reconciliation | Detective | Automated |
+| Invalid portfolio weights | Weight-total validation | Preventive | Automated |
+| Excel/Python refresh failure | Surface refresh failure and diagnostic output | Detective | Semi-automated |
+| Third-party data failure | Fail visibly rather than silently returning incomplete analysis | Detective | Automated |
+
+---
+
+## Key Risk Indicators
+
+The NFR dashboard includes project-defined **Key Risk Indicators (KRIs)** for ongoing monitoring.
+
+Current KRIs include:
+
+| KRI | Monitoring Objective |
+|---|---|
+| Attribution reconciliation rate | Detect analytical reconciliation failures |
+| Failed automated tests | Monitor validated analytical and control logic |
+| Portfolio-control exceptions | Monitor breaches of defined investment-policy thresholds |
+
+KRIs are evaluated against defined thresholds and assigned:
+
+```text
+GREEN
+AMBER
+RED
+```
+
+This separates **ongoing risk monitoring** from one-time risk assessment.
+
+---
+
+## Incident & Issue Management
+
+Portfolio Pulse maintains a structured incident and issue log.
+
+Each issue records:
+
+- Date
+- Risk category
+- Issue
+- Severity
+- Root cause
+- Control involved
+- Remediation
+- Resolution time
+- Recurrence
+
+The current dataset uses development issues encountered while building Portfolio Pulse, including:
+
+- Excel/Python refresh failures
+- Workbook merged-cell write failures
+- Historical ETF data gaps
+- Attribution reconciliation requirements
+
+The framework treats these as risk and control events that can be categorized, remediated, and analyzed over time.
+
+---
+
+## Incident Trend Analysis
+
+Incident data is aggregated to identify:
+
+- Total logged issues
+- Recurring issues
+- Issues by risk category
+- Issues by severity
+
+The resulting workflow is:
+
+```text
+Incident
+    │
+    ▼
+Root Cause
+    │
+    ▼
+Remediation
+    │
+    ▼
+Recurrence Monitoring
+    │
+    ▼
+Trend Analysis
+```
+
+This allows recurring operational or technical issues to be distinguished from isolated failures.
+
+---
+
+## NFR Framework Disclaimer
+
+The NFR module is an **educational risk-and-controls implementation**.
+
+It uses RCSA-style concepts, project-defined KRIs, risk taxonomy, control classification, incident management, and residual-risk analysis to demonstrate risk-management principles.
+
+It is **not** a bank's proprietary RCSA methodology, a regulatory compliance system, or evidence of professional regulatory-compliance certification.
+
+---
+
+# Application Interfaces
+
 ## Streamlit Application
 
-The Streamlit interface provides interactive allocation controls and immediately recalculates portfolio analytics.
+The Streamlit interface provides interactive allocation controls and recalculates portfolio analytics as the allocation changes.
 
 The application includes:
 
-- portfolio allocation sliders
-- portfolio snapshot KPIs
-- investment-policy control results
-- exception monitoring
-- portfolio vs. benchmark wealth curve
-- historical stress tests
-- return-driver visualization
-- allocation sensitivity analysis
-- methodology and limitations
+- Portfolio allocation sliders
+- Portfolio snapshot KPIs
+- Investment-policy control results
+- Exception monitoring
+- RCSA-style risk register
+- Inherent and residual risk monitoring
+- KRIs
+- Incident and issue trends
+- Portfolio vs. benchmark wealth curve
+- Historical stress tests
+- Return-driver visualization
+- Allocation sensitivity analysis
+- Methodology and limitations
 
-Run locally with:
+### Run Locally
+
+Install dependencies:
 
 ```bash
 python3 -m pip install -r requirements.txt
+```
+
+Launch the application:
+
+```bash
 python3 -m streamlit run app.py
 ```
+
+Or use the deployed version:
+
+**[Launch Portfolio Pulse →](https://charlottekwon-portfolio-pulse.streamlit.app/)**
 
 ---
 
@@ -351,33 +645,35 @@ Portfolio Pulse also includes an analyst-style Excel implementation.
 
 The Excel workflow supports:
 
-- editable portfolio inputs
-- allocation validation
+- Editable portfolio inputs
+- Allocation validation
 - Python-driven analytics refresh
-- portfolio KPIs
-- historical stress-test outputs
-- wealth-curve visualization
-- return attribution
-- allocation sensitivity
-- automated reporting
+- Portfolio KPIs
+- Historical stress-test outputs
+- Wealth-curve visualization
+- Return attribution
+- Allocation sensitivity
+- Automated reporting
 
 VBA provides the interaction and automation layer while Python remains the analytical engine.
 
-This design allows portfolio analysis to be consumed through a familiar spreadsheet workflow without duplicating the underlying financial calculations.
+This allows portfolio analysis to be consumed through a familiar spreadsheet workflow without duplicating the underlying financial calculations.
 
 ---
 
+# Testing
+
 ## Automated Testing
 
-Portfolio Pulse currently includes **9 automated tests**.
+Portfolio Pulse currently includes **13 automated tests**.
 
-Run them with:
+Run the complete test suite with:
 
 ```bash
 python3 -m pytest tests -v
 ```
 
-The test suite covers:
+The tests cover:
 
 1. Portfolio-weight normalization
 2. Weighted portfolio-return calculation
@@ -388,18 +684,22 @@ The test suite covers:
 7. Portfolio-control exception detection
 8. Historical proxy resolution
 9. Prevention of silent asset dropping during proxy resolution
+10. NFR risk scoring
+11. Invalid risk-score handling
+12. KRI threshold evaluation
+13. Incident trend aggregation
 
-A successful run should return:
+A successful run returns:
 
 ```text
-9 passed
+============================== 13 passed ==============================
 ```
 
-Testing is particularly important for the controls and attribution layers because those features are intended to identify or explain portfolio behavior rather than simply display statistics.
+Testing is particularly important for the attribution, controls, and NFR layers because these features are intended to identify, explain, or monitor risk rather than simply display statistics.
 
 ---
 
-## Project Structure
+# Project Structure
 
 ```text
 portfolio-pulse/
@@ -410,6 +710,7 @@ portfolio-pulse/
 ├── controls.py
 ├── data.py
 ├── market_engine.py
+├── nfr.py
 ├── portfolio.py
 ├── scenarios.py
 ├── sensitivity.py
@@ -420,16 +721,22 @@ portfolio-pulse/
 ├── requirements_streamlit.txt
 ├── README.md
 │
+├── nfr_data/
+│   ├── incidents.csv
+│   └── risk_register.csv
+│
 ├── tests/
 │   ├── test_analytics.py
 │   ├── test_attribution.py
 │   ├── test_controls.py
-│   └── test_data.py
+│   ├── test_data.py
+│   └── test_nfr.py
 │
 ├── assets/
 │   ├── portfolio-overview.png
 │   ├── stress-testing.png
-│   └── allocation-analysis.png
+│   ├── allocation-analysis.png
+│   └── portfolio-controls.png
 │
 └── excel/
     ├── Portfolio_Pulse_Analysis.xlsm
@@ -452,30 +759,38 @@ portfolio-pulse/
 
 ---
 
-## Tech Stack
+# Tech Stack
 
-**Finance & Data**
+### Finance & Data
 
 - Python
 - pandas
 - NumPy
 - yfinance
 
-**Application**
+### Application
 
 - Streamlit
 
-**Spreadsheet Automation**
+### Risk & Controls
+
+- Investment-policy controls
+- RCSA-style risk scoring
+- Key Risk Indicators
+- Exception monitoring
+- Incident trend analysis
+
+### Spreadsheet Automation
 
 - Microsoft Excel
 - VBA
 - openpyxl
 
-**Testing**
+### Testing
 
 - pytest
 
-**Version Control & Deployment**
+### Version Control & Deployment
 
 - Git
 - GitHub
@@ -483,39 +798,53 @@ portfolio-pulse/
 
 ---
 
-## Key Takeaways
+# Key Takeaways
 
-Building Portfolio Pulse surfaced several practical lessons about portfolio analysis.
-
-### Diversification is about risk exposure, not asset count
+## Diversification is about risk exposure, not asset count
 
 Adding more asset classes does not automatically reduce drawdown. The underlying exposures and their behavior across market regimes matter more than the number of holdings.
 
-### Ending return can hide path risk
+## Ending return can hide path risk
 
 Two portfolios can produce similar ending wealth while exposing an investor to very different drawdowns and recovery periods.
 
-### Stock/bond diversification is regime-dependent
+## Stock/bond diversification is regime-dependent
 
 The 2022 inflation and rate shock demonstrates that equities and bonds do not necessarily offset one another in every environment.
 
-### Benchmark-relative performance needs risk context
+## Benchmark-relative performance needs risk context
 
 Outperforming a benchmark is more informative when considered alongside volatility, drawdown, beta, and the additional risk required to generate that return.
 
-### Controls make analytical rules operational
+## Controls make analytical rules operational
 
 A portfolio rule becomes more useful when it can be translated into a testable threshold, evaluated consistently, and surfaced as an exception when breached.
 
-### Reconciliation matters
+## Inherent risk and residual risk answer different questions
 
-Analytical outputs should tie back to their underlying calculations. The attribution reconciliation control was added specifically to verify that reported asset contributions reproduce portfolio daily return.
+Assessing risk before and after a control makes the intended effect of the control visible and separates the underlying exposure from the remaining risk.
+
+## KRIs turn risk assessment into ongoing monitoring
+
+A risk register identifies risks at a point in time. KRIs provide a mechanism for observing whether the underlying risk or control environment changes.
+
+## Incidents can reveal patterns
+
+Logging root cause, remediation, severity, and recurrence makes it possible to distinguish isolated failures from repeated control or process weaknesses.
+
+## Reconciliation matters
+
+Analytical outputs should tie back to their underlying calculations. The attribution reconciliation control verifies that reported asset contributions reproduce portfolio daily return.
+
+## Transparency matters when historical data is incomplete
+
+When an ETF does not have sufficient history for a stress scenario, explicitly documenting a reasonable proxy is more defensible than silently dropping the exposure.
 
 ---
 
-## Limitations
+# Limitations
 
-Portfolio Pulse is an educational analytics project.
+Portfolio Pulse is an educational analytics and risk-management project.
 
 Important limitations include:
 
@@ -527,12 +856,14 @@ Important limitations include:
 - Historical stress tests are descriptive, not predictive.
 - Sensitivity scenarios are illustrative rather than optimization recommendations.
 - Portfolio-control thresholds are project-defined rules, not regulatory requirements.
+- RCSA scoring and KRIs are simplified, project-defined implementations.
+- The NFR framework is not a proprietary institutional risk methodology.
 - Portfolio Pulse does not provide personalized investment advice.
 
 ---
 
-## Live Application
+# Live Application
 
-**[Launch Portfolio Pulse](https://charlottekwon-portfolio-pulse.streamlit.app/)**
+**[Launch Portfolio Pulse →](https://charlottekwon-portfolio-pulse.streamlit.app/)**
 
-Built as an independent portfolio analytics project using Python, Streamlit, Excel, and VBA.
+Built as an independent portfolio analytics and risk-controls project using Python, Streamlit, Excel, and VBA.
