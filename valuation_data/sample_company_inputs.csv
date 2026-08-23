@@ -1,0 +1,21 @@
+Metric,Value
+Base Revenue,1000
+Revenue Growth Y1,0.06
+Revenue Growth Y2,0.06
+Revenue Growth Y3,0.06
+Revenue Growth Y4,0.06
+Revenue Growth Y5,0.06
+EBIT Margin,0.20
+Tax Rate,0.25
+D&A % Revenue,0.04
+Capex % Revenue,0.05
+NWC % Revenue,0.10
+Risk-Free Rate,0.04
+Beta,1.00
+Equity Risk Premium,0.05
+Pre-Tax Cost of Debt,0.06
+Market Value Equity,800
+Market Value Debt,200
+Net Debt,100
+Diluted Shares,100
+Terminal Growth Rate,0.025
