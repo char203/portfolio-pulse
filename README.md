@@ -1,5 +1,7 @@
 # Portfolio Pulse
 
+[![CI](https://github.com/char203/portfolio-pulse/actions/workflows/ci.yml/badge.svg)](https://github.com/char203/portfolio-pulse/actions/workflows/ci.yml)
+
 **Multi-asset portfolio analytics, company valuation, investment-policy
 controls, and non-financial risk monitoring built with Python,
 Streamlit, and Excel/VBA.**
@@ -546,8 +548,6 @@ historical proxy resolution, investment-control exceptions, NFR
 scoring/KRIs/incidents, UFCF, WACC, terminal-value guardrails,
 enterprise-to-equity bridging, first-year working capital, forecast
 compounding, and valuation sensitivity.
-
-Use the exact local pytest result when stating the current test count.
 
 ------------------------------------------------------------------------
 
